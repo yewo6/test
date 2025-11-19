@@ -14,6 +14,7 @@ musicURL          := "http://archive.org/download/BigBillBroonzyHowYouWantItDone
 musicFolder       := "C:\soundsfolderthing"
 wallpaperFolder   := "C:\wallpaperthing"
 
+; ================= WALLPAPER URLS =================
 wallpaperURLs := Object()
 wallpaperURLs[1] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/dog_fart.jpg"
 wallpaperURLs[2] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/dog_fart2.jpg"
@@ -22,37 +23,38 @@ wallpaperURLs[4] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/far
 wallpaperURLs[5] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/man_fart.jpg"
 wallpaperURLs[6] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/poop_fart.jpg"
 wallpaperURLs[7] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/must_fart.jpg"
-; ============================================
 
-; ---------------- SETUP FOLDERS ----------------
+; ================= SETUP FOLDERS =================
 IfNotExist, %musicFolder%
     FileCreateDir, %musicFolder%
-
 IfNotExist, %wallpaperFolder%
     FileCreateDir, %wallpaperFolder%
 
-; ---------------- DOWNLOAD WALLPAPERS FROM GITHUB IF NOT ALREADY ----------------
+; ================= DOWNLOAD WALLPAPERS =================
 for index, url in wallpaperURLs {
-    ; Extract a file name from the URL — take the part after last "/"
     SplitPath, url, , , , name
-    ; Remove query `?raw=true` if present
-    StringSplit, parts, name, `?
-    localFile := wallpaperFolder "\" parts1
+    localFile := wallpaperFolder "\" name
+    ; force .jpg extension
+    SplitPath, localFile, fileNameNoExt, dir
+    localFile := dir "\" fileNameNoExt ".jpg"
 
-    ; If file doesn't already exist locally, download it
-    if !FileExist(localFile) {
-        URLDownloadToFile, %url%, %localFile%
-    }
+    if !FileExist(localFile)
+        DownloadFile(url, localFile)
 }
 
-; ---------------- SET TIMERS ----------------
+; ================= DOWNLOAD MUSIC =================
+musicFile := musicFolder "\music.mp3"
+if !FileExist(musicFile)
+    DownloadFile(musicURL, musicFile)
+
+; ================= SET TIMERS =================
 SetTimer, SpeakTimer, %speakInterval%
 SetTimer, CalcTimer, %calcInterval%
 SetTimer, MusicTimer, %musicInterval%
 SetTimer, WallpaperTimer, %wallpaperInterval%
 return
 
-; ---------------- SPEAK ----------------
+; ---------------- FUNCTIONS ----------------
 SpeakTimer:
     Speak(msg, volume)
 return
@@ -63,7 +65,6 @@ Speak(str, vol) {
     v.Speak(str)
 }
 
-; ---------------- CALCULATOR ----------------
 CalcTimer:
     Run, calc.exe
     WinWaitActive, Calculator
@@ -72,28 +73,37 @@ CalcTimer:
     Send, %numbersToType%
 return
 
-; ---------------- MUSIC ----------------
 MusicTimer:
-    filePath := musicFolder "\music.mp3"
-    ; Download music every time (overwrite)
-    URLDownloadToFile, %musicURL%, %filePath%
     wmp := ComObjCreate("WMPlayer.OCX")
     wmp.settings.volume := 50
-    wmp.URL := filePath
+    wmp.URL := musicFile
     wmp.controls.play
 return
 
-; ---------------- WALLPAPER ----------------
 WallpaperTimer:
     images := []
-    Loop, Files, %wallpaperFolder%\*.jpg,%wallpaperFolder%\*.png
+    Loop, Files, %wallpaperFolder%\*.jpg
         images.Push(A_LoopFileFullPath)
     if (images.MaxIndex() = 0)
-        return  ; no wallpapers found
+        return
 
     Random, r, 1, % images.MaxIndex()
     chosen := images[r]
 
-    ; Change wallpaper
     DllCall("SystemParametersInfo", UInt, 20, UInt, 0, Str, chosen, UInt, 3)
 return
+
+; ---------------- DOWNLOAD FUNCTION ----------------
+DownloadFile(URL, SavePath) {
+    xml := ComObjCreate("MSXML2.XMLHTTP")
+    xml.Open("GET", URL, false)
+    xml.Send()
+    if (xml.Status = 200) {
+        stream := ComObjCreate("ADODB.Stream")
+        stream.Type := 1 ; Binary
+        stream.Open()
+        stream.Write(xml.ResponseBody)
+        stream.SaveToFile(SavePath, 2) ; 2 = overwrite
+        stream.Close()
+    }
+}
