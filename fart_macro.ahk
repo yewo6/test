@@ -14,15 +14,14 @@ musicURL          := "http://archive.org/download/BigBillBroonzyHowYouWantItDone
 musicFolder       := "C:\soundsfolderthing"
 wallpaperFolder   := "C:\wallpaperthing"
 
-; GitHub raw URLs for wallpapers
 wallpaperURLs := Object()
-wallpaperURLs[1] := "https://github.com/yewo6/wallpapers/blob/main/dog_fart.jpg?raw=true"
-wallpaperURLs[2] := "https://github.com/yewo6/wallpapers/blob/main/dog_fart2.jpg?raw=true"
-wallpaperURLs[3] := "https://github.com/yewo6/wallpapers/blob/main/hamster_fart.jpg?raw=true"
-wallpaperURLs[4] := "https://github.com/yewo6/wallpapers/blob/main/fart_rainbow.jpg?raw=true"
-wallpaperURLs[5] := "https://github.com/yewo6/wallpapers/blob/main/man_fart.jpg?raw=true"
-wallpaperURLs[6] := "https://github.com/yewo6/wallpapers/blob/main/poop_fart.jpg?raw=true"
-wallpaperURLs[7] := "https://github.com/yewo6/wallpapers/blob/main/must_fart.jpg?raw=true"
+wallpaperURLs[1] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/dog_fart.jpg"
+wallpaperURLs[2] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/dog_fart2.jpg"
+wallpaperURLs[3] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/hamster_fart.jpg"
+wallpaperURLs[4] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/fart_rainbow.jpg"
+wallpaperURLs[5] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/man_fart.jpg"
+wallpaperURLs[6] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/poop_fart.jpg"
+wallpaperURLs[7] := "https://raw.githubusercontent.com/yewo6/wallpapers/main/must_fart.jpg"
 ; ============================================
 
 ; ---------------- SETUP FOLDERS ----------------
