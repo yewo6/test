@@ -5,7 +5,7 @@ SetBatchLines, -1
 ; ================= SETTINGS =================
 speakInterval     := 1000 * 60 * 15       ; 15 minutes
 calcInterval      := 1000 * 60 * 50       ; 50 minutes
-musicInterval     := 1000 * 60 * 32       ; 32 minutes
+musicInterval     := 1000 * 60 * 72       ; 72 minutes
 wallpaperInterval := 1000 * 60 * 10       ; 10 minutes
 volume            := 20
 msg               := "penis"
